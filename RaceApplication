@@ -1,0 +1,53 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
+public class RaceApplication extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        BorderPane root = new BorderPane();
+        Scene scene = new Scene(root, 800, 600);
+
+        // Race control buttons
+        Button startButton = new Button("Start Race");
+        Button setupButton = new Button("Setup Horses");
+        root.setBottom(startButton);
+
+        startButton.setOnAction(e -> {
+            // Placeholder for start race logic
+            System.out.println("Race started!");
+        });
+
+        setupButton.setOnAction(e -> {
+            // Placeholder for setup logic
+            System.out.println("Setup horses!");
+        });
+
+        root.setTop(setupButton);
+
+        primaryStage.setTitle("Horse Racing Simulation");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public void displayHorses(Pane raceTrack) {
+        Horse[] horses = {new Horse('♘', "Champion", 0.9), new Horse('♞', "Lightning", 0.8)};
+        int yPos = 50;
+    
+        for (Horse horse : horses) {
+            Text horseSymbol = new Text(horse.getSymbol() + "");
+            horseSymbol.setX(10); // Starting X position
+            horseSymbol.setY(yPos);
+            
+            yPos += 50; // Increment for next horse
+            
+            raceTrack.getChildren().add(horseSymbol);
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
