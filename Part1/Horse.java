@@ -2,68 +2,75 @@
 /**
  * Write a description of class Horse here.
  * 
- * @author Hamza Alsoodani
+ * @author (your name) 
  * @version (a version number or a date)
  */
-public class Horse {
-    private String name;
-    private char symbol;
-    private int distanceTravelled;
-    private boolean fallen;
-    private double confidence;
-
-    // Constructor
-    public Horse(char horseSymbol, String horseName, double horseConfidence) {
-        this.symbol = horseSymbol;
-        this.name = horseName;
-        setConfidence(horseConfidence); // Ensures the confidence is set within range
-        this.distanceTravelled = 0;
-        this.fallen = false;
+public class Horse
+{
+    //Fields of class Horse
+    
+    
+      
+    //Constructor of class Horse
+    /**
+     * Constructor for objects of class Horse
+     */
+    public Horse(char horseSymbol, String horseName, double horseConfidence)
+    {
+       
+    }
+    
+    
+    
+    //Other methods of class Horse
+    public void fall()
+    {
+        
+    }
+    
+    public double getConfidence()
+    {
+        
+    }
+    
+    public int getDistanceTravelled()
+    {
+        
+    }
+    
+    public String getName()
+    {
+        
+    }
+    
+    public char getSymbol()
+    {
+        
+    }
+    
+    public void goBackToStart()
+    {
+        
+    }
+    
+    public boolean hasFallen()
+    {
+        
     }
 
-    public void fall() {
-        this.fallen = true;
+    public void moveForward()
+    {
+        
     }
 
-    public double getConfidence() {
-        return this.confidence;
+    public void setConfidence(double newConfidence)
+    {
+        
     }
-
-    public int getDistanceTravelled() {
-        return this.distanceTravelled;
+    
+    public void setSymbol(char newSymbol)
+    {
+        
     }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public char getSymbol() {
-        return this.symbol;
-    }
-
-    public void goBackToStart() {
-        this.distanceTravelled = 0;
-        this.fallen = false;
-    }
-
-    public boolean hasFallen() {
-        return this.fallen;
-    }
-
-    public void moveForward() {
-        if (!this.fallen) { // Prevents moving forward if the horse has fallen
-            this.distanceTravelled += 1;
-        }
-    }
-
-    public void setConfidence(double newConfidence) {
-        if (newConfidence < 0 || newConfidence > 1) {
-            throw new IllegalArgumentException("Confidence must be between 0 and 1.");
-        }
-        this.confidence = newConfidence;
-    }
-
-    public void setSymbol(char newSymbol) {
-        this.symbol = newSymbol;
-    }
+    
 }
