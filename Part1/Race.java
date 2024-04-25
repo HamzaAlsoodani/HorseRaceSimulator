@@ -13,8 +13,6 @@ public class Race {
     private Horse lane1Horse;
     private Horse lane2Horse;
     private Horse lane3Horse;
-    private boolean finished;
-    private Horse winningHorse;
 
     /**
      * Constructor for objects of class Race
@@ -28,8 +26,6 @@ public class Race {
         lane1Horse = null;
         lane2Horse = null;
         lane3Horse = null;
-        finished = false; // Initialize as not finished
-        winningHorse = null;
     }
 
     /**
@@ -65,8 +61,6 @@ public class Race {
         lane2Horse.goBackToStart();
         lane3Horse.goBackToStart();
 
-        Horse winningHorse = null; // This will hold the winning horse
-
         while (!finished) {
             // move each horse
             moveHorse(lane1Horse);
@@ -76,15 +70,8 @@ public class Race {
             // print the race positions
             printRace();
 
-            // check if any of the horses has won
-            if (raceWonBy(lane1Horse)) {
-                winningHorse = lane1Horse;
-                finished = true;
-            } else if (raceWonBy(lane2Horse)) {
-                winningHorse = lane2Horse;
-                finished = true;
-            } else if (raceWonBy(lane3Horse)) {
-                winningHorse = lane3Horse;
+            // if any of the three horses has won the race is finished
+            if (raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse)) {
                 finished = true;
             }
 
@@ -94,15 +81,6 @@ public class Race {
             } catch (Exception e) {
             }
         }
-
-        // Print the race one last time
-        printRace();
-
-        // announce the winner
-        if (winningHorse != null) {
-            System.out.println("And the winner is " + winningHorse.getName() + "!");
-        }
-
     }
 
     /**
@@ -188,7 +166,7 @@ public class Race {
         // if the horse has fallen then print dead
         // else print the horse's symbol
         if (theHorse.hasFallen()) {
-            System.out.print('\u2716');
+            System.out.print('\u2322');
         } else {
             System.out.print(theHorse.getSymbol());
         }
@@ -198,18 +176,6 @@ public class Race {
 
         // print the | for the end of the track
         System.out.print('|');
-
-        // Print the confidence next to the horse lane
-        System.out.printf(" %s (Confidence: %.2f)", theHorse.getName(), theHorse.getConfidence());
-
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public Horse getWinner() {
-        return winningHorse;
     }
 
     /***
@@ -224,10 +190,5 @@ public class Race {
             System.out.print(aChar);
             i = i + 1;
         }
-    }
-
-    public void setNumberOfLanes(int newLanes) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setNumberOfLanes'");
     }
 }
