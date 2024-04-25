@@ -1,5 +1,7 @@
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A three-horse race, each horse running in its own lane
@@ -14,7 +16,7 @@ public class Race {
     private Horse lane2Horse;
     private Horse lane3Horse;
     private boolean finished;
-    private Horse winningHorse;
+    private List<Horse> winningHorses; // Store multiple potential winners
 
     /**
      * Constructor for objects of class Race
@@ -29,7 +31,20 @@ public class Race {
         lane2Horse = null;
         lane3Horse = null;
         finished = false; // Initialize as not finished
-        winningHorse = null;
+        winningHorses = new ArrayList<>();
+    }
+
+    public static void main(String[] args) {
+
+        Race race = new Race(10);
+
+        // Add three horses
+        race.addHorse(new Horse('♘', "Champion", 0.9), 1);
+        race.addHorse(new Horse('♞', "Lightning", 0.8), 2);
+        race.addHorse(new Horse('♜', "Thunder", 0.85), 3);
+
+        // Start the race
+        race.startRace();
     }
 
     /**
@@ -57,52 +72,53 @@ public class Race {
      * race is finished
      */
     public void startRace() {
-        // declare a local variable to tell us when the race is finished
-        boolean finished = false;
-
-        // reset all the lanes (all horses not fallen and back to 0).
+        finished = false;
         lane1Horse.goBackToStart();
         lane2Horse.goBackToStart();
         lane3Horse.goBackToStart();
 
-        Horse winningHorse = null; // This will hold the winning horse
-
         while (!finished) {
-            // move each horse
             moveHorse(lane1Horse);
             moveHorse(lane2Horse);
             moveHorse(lane3Horse);
 
-            // print the race positions
             printRace();
+            checkWinCondition();
 
-            // check if any of the horses has won
-            if (raceWonBy(lane1Horse)) {
-                winningHorse = lane1Horse;
-                finished = true;
-            } else if (raceWonBy(lane2Horse)) {
-                winningHorse = lane2Horse;
-                finished = true;
-            } else if (raceWonBy(lane3Horse)) {
-                winningHorse = lane3Horse;
-                finished = true;
-            }
-
-            // wait for 100 milliseconds
             try {
                 TimeUnit.MILLISECONDS.sleep(100);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
 
-        // Print the race one last time
         printRace();
+        announceWinners();
+    }
 
-        // announce the winner
-        if (winningHorse != null) {
-            System.out.println("And the winner is " + winningHorse.getName() + "!");
+    private void checkWinCondition() {
+        if (raceWonBy(lane1Horse)) {
+            winningHorses.add(lane1Horse);
         }
+        if (raceWonBy(lane2Horse)) {
+            winningHorses.add(lane2Horse);
+        }
+        if (raceWonBy(lane3Horse)) {
+            winningHorses.add(lane3Horse);
+        }
+        if (!winningHorses.isEmpty()) {
+            finished = true;
+        }
+    }
 
+    private void announceWinners() {
+        if (winningHorses.size() == 1) {
+            System.out.println("And the winner is " + winningHorses.get(0).getName() + "!");
+        } else {
+            System.out.print("It's a tie between: ");
+            winningHorses.forEach(horse -> System.out.print(horse.getName() + " "));
+            System.out.println();
+        }
     }
 
     /**
@@ -206,10 +222,6 @@ public class Race {
 
     public boolean isFinished() {
         return finished;
-    }
-
-    public Horse getWinner() {
-        return winningHorse;
     }
 
     /***
