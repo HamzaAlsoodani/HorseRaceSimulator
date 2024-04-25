@@ -199,6 +199,9 @@ public class Race {
         // print the | for the end of the track
         System.out.print('|');
 
+        // Print the confidence next to the horse lane
+        System.out.printf(" %s (Confidence: %.2f)", theHorse.getName(), theHorse.getConfidence());
+
     }
 
     public boolean isFinished() {
