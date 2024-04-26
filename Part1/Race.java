@@ -39,9 +39,9 @@ public class Race {
         Race race = new Race(10);
 
         // Add three horses
-        race.addHorse(new Horse('♘', "Champion", 0.9), 1);
-        race.addHorse(new Horse('♞', "Lightning", 0.8), 2);
-        race.addHorse(new Horse('♜', "Thunder", 0.85), 3);
+        race.addHorse(new Horse('♘', "PIPPI LONGSTOCKING", 0.6), 1);
+        race.addHorse(new Horse('♞', "KOKOMO", 0.6), 2);
+        race.addHorse(new Horse('♜', "EL JEFE", 0.4), 3);
 
         // Start the race
         race.startRace();
@@ -72,23 +72,32 @@ public class Race {
      * race is finished
      */
     public void startRace() {
+        // Assume horses have already been reset to start positions when added
         finished = false;
-        lane1Horse.goBackToStart();
-        lane2Horse.goBackToStart();
-        lane3Horse.goBackToStart();
 
         while (!finished) {
-            moveHorse(lane1Horse);
-            moveHorse(lane2Horse);
-            moveHorse(lane3Horse);
+            if (lane1Horse != null)
+                moveHorse(lane1Horse);
+            if (lane2Horse != null)
+                moveHorse(lane2Horse);
+            if (lane3Horse != null)
+                moveHorse(lane3Horse);
 
             printRace();
             checkWinCondition();
+
+            if ((lane1Horse != null && lane1Horse.hasFallen()) &&
+                    (lane2Horse != null && lane2Horse.hasFallen()) &&
+                    (lane3Horse != null && lane3Horse.hasFallen())) {
+                System.out.println("All horses have fallen! Race is over.");
+                finished = true;
+            }
 
             try {
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                return;
             }
         }
 
@@ -97,13 +106,13 @@ public class Race {
     }
 
     private void checkWinCondition() {
-        if (raceWonBy(lane1Horse)) {
+        if (lane1Horse != null && raceWonBy(lane1Horse) && !winningHorses.contains(lane1Horse)) {
             winningHorses.add(lane1Horse);
         }
-        if (raceWonBy(lane2Horse)) {
+        if (lane2Horse != null && raceWonBy(lane2Horse) && !winningHorses.contains(lane2Horse)) {
             winningHorses.add(lane2Horse);
         }
-        if (raceWonBy(lane3Horse)) {
+        if (lane3Horse != null && raceWonBy(lane3Horse) && !winningHorses.contains(lane3Horse)) {
             winningHorses.add(lane3Horse);
         }
         if (!winningHorses.isEmpty()) {
@@ -154,11 +163,7 @@ public class Race {
      * @return true if the horse has won, false otherwise.
      */
     private boolean raceWonBy(Horse theHorse) {
-        if (theHorse.getDistanceTravelled() == raceLength) {
-            return true;
-        } else {
-            return false;
-        }
+        return theHorse.getDistanceTravelled() >= raceLength;
     }
 
     /***
