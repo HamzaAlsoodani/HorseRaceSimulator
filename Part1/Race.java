@@ -121,11 +121,22 @@ public class Race {
     }
 
     private void announceWinners() {
-        if (winningHorses.size() == 1) {
+        if (winningHorses.isEmpty()) {
+            // Check if all horses have fallen to determine the appropriate announcement
+            if ((lane1Horse != null && lane1Horse.hasFallen()) &&
+                    (lane2Horse != null && lane2Horse.hasFallen()) &&
+                    (lane3Horse != null && lane3Horse.hasFallen())) {
+                System.out.println("All horses have fallen! No winners in this race.");
+            } else {
+                System.out.println("No horse finished the race.");
+            }
+        } else if (winningHorses.size() == 1) {
             System.out.println("And the winner is " + winningHorses.get(0).getName() + "!");
         } else {
             System.out.print("It's a tie between: ");
-            winningHorses.forEach(horse -> System.out.print(horse.getName() + " "));
+            for (Horse horse : winningHorses) {
+                System.out.print(horse.getName() + " ");
+            }
             System.out.println();
         }
     }
