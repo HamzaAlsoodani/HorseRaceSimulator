@@ -3,7 +3,7 @@
  * Write a description of class Horse here.
  * 
  * @author Hamza Alsoodani
- * @version (a version number or a date)
+ * @version 26/04/2024
  */
 public class Horse {
     private String name;
