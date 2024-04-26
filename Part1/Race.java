@@ -36,12 +36,12 @@ public class Race {
 
     public static void main(String[] args) {
 
-        Race race = new Race(10);
+        Race race = new Race(15);
 
         // Add three horses
-        race.addHorse(new Horse('♘', "PIPPI LONGSTOCKING", 0.6), 1);
-        race.addHorse(new Horse('♞', "KOKOMO", 0.6), 2);
-        race.addHorse(new Horse('♜', "EL JEFE", 0.4), 3);
+        // race.addHorse(new Horse('♘', "PIPPI LONGSTOCKING", 0.6), 1);
+        // race.addHorse(new Horse('♞', "KOKOMO", 0.6), 2);
+        // race.addHorse(new Horse('♜', "EL JEFE", 0.4), 3);
 
         // Start the race
         race.startRace();
@@ -72,27 +72,38 @@ public class Race {
      * race is finished
      */
     public void startRace() {
-        // Assume horses have already been reset to start positions when added
         finished = false;
 
+        // Ensure at least one horse is in the race to start
+        if (lane1Horse == null && lane2Horse == null && lane3Horse == null) {
+            System.out.println("No horses are in the race.");
+            return; // Exit if no horses are added
+        }
+
         while (!finished) {
-            if (lane1Horse != null)
+            // Only move and check horses that are present in their lanes
+            if (lane1Horse != null) {
                 moveHorse(lane1Horse);
-            if (lane2Horse != null)
+            }
+            if (lane2Horse != null) {
                 moveHorse(lane2Horse);
-            if (lane3Horse != null)
+            }
+            if (lane3Horse != null) {
                 moveHorse(lane3Horse);
+            }
 
             printRace();
             checkWinCondition();
 
-            if ((lane1Horse != null && lane1Horse.hasFallen()) &&
-                    (lane2Horse != null && lane2Horse.hasFallen()) &&
-                    (lane3Horse != null && lane3Horse.hasFallen())) {
-                System.out.println("All horses have fallen! Race is over.");
+            // Check if all participating horses have fallen
+            if ((lane1Horse != null && lane1Horse.hasFallen() || lane1Horse == null) &&
+                    (lane2Horse != null && lane2Horse.hasFallen() || lane2Horse == null) &&
+                    (lane3Horse != null && lane3Horse.hasFallen() || lane3Horse == null)) {
+                System.out.println("All participating horses have fallen! Race is over.");
                 finished = true;
             }
 
+            // Delay to simulate time passing between race steps
             try {
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (InterruptedException e) {
@@ -181,12 +192,12 @@ public class Race {
      * Print the race on the terminal
      */
     private void printRace() {
-        System.out.print('\u000C'); // clear the terminal window
+        System.out.print('\u000C'); // Clear the terminal window
 
         multiplePrint('=', raceLength + 3); // top edge of track
         System.out.println();
 
-        printLane(lane1Horse);
+        printLane(lane1Horse); // Print each lane safely
         System.out.println();
 
         printLane(lane2Horse);
@@ -206,34 +217,29 @@ public class Race {
      * to show how far the horse has run
      */
     private void printLane(Horse theHorse) {
-        // calculate how many spaces are needed before
-        // and after the horse
+        if (theHorse == null) {
+            System.out.println(" ");
+            return; // Exit the method if there is no horse in the lane
+        }
+
+        // The rest of the method remains unchanged
         int spacesBefore = theHorse.getDistanceTravelled();
-        int spacesAfter = raceLength - theHorse.getDistanceTravelled();
+        int spacesAfter = raceLength - spacesBefore;
 
-        // print a | for the beginning of the lane
         System.out.print('|');
-
-        // print the spaces before the horse
         multiplePrint(' ', spacesBefore);
 
-        // if the horse has fallen then print dead
-        // else print the horse's symbol
         if (theHorse.hasFallen()) {
-            System.out.print('\u2716');
+            System.out.print('\u2716'); // Unicode for a fallen horse symbol
         } else {
             System.out.print(theHorse.getSymbol());
         }
 
-        // print the spaces after the horse
         multiplePrint(' ', spacesAfter);
-
-        // print the | for the end of the track
         System.out.print('|');
 
         // Print the confidence next to the horse lane
         System.out.printf(" %s (Confidence: %.2f)", theHorse.getName(), theHorse.getConfidence());
-
     }
 
     public boolean isFinished() {
